@@ -1,4 +1,4 @@
-from mods import Texture, SFX, pygame, Application, Text
+from mods import *
 
 window: Application = Application(800, 600, "12DDT") # Creates new window.
 gameRunning: bool = True # Status of game loop.
