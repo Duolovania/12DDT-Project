@@ -1,21 +1,22 @@
 from mods import Texture, SFX, pygame, Application, Text
 
-window: Application = Application(800, 600, "12DDT")
-gameRunning: bool = True
-mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0)
+window: Application = Application(800, 600, "12DDT") # Creates new window.
+gameRunning: bool = True # Status of game loop.
+mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
 tommy: Texture = Texture("tommy.JPG", scale = 80)
-music: SFX = SFX("Arcadia.mp3")
+music: SFX = SFX("Arcadia.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
 
 music.LoadMusic()
-score: int = 0
+score: int = 0 # Game score.
 
-moonFarkFont: str = "moonfark-font/MOONFARK-goova-studio.ttf"
+moonFarkFont: str = "moonfark-font/MOONFARK-goova-studio.ttf" # Font path.
 scoreText: Text = Text(score, moonFarkFont)
 
 # Class handles game events.
 class Game:
+    # Function controls game loop and closes window after game loop is terminated.
     def Run():
         while gameRunning:
             Game.Forever()
@@ -23,6 +24,7 @@ class Game:
         pygame.quit()
         quit()
 
+    # Game loop.
     def Forever():
         pygame.display.update()
         
@@ -32,9 +34,8 @@ class Game:
         scoreText.Refresh(score)
         window.Refresh(scoreText)
         Game.HandleEvents()
-
-        
-        
+    
+    # Handles user's keyboard and mouse events.
     def HandleEvents():
         for event in pygame.event.get():
             match event.type:
@@ -48,6 +49,7 @@ class Game:
                     if scoreText.rect.collidepoint(mousepos):
                         AGuitar.PlayThroughChannel(mouseChannel, volume = 0.8)
 
+    # Defines what each key press does.
     def KeyEvents(gameEvent: pygame.event):
         match gameEvent.key:
             case pygame.K_w:

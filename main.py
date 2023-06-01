@@ -1,2 +1,3 @@
 from game import Game
-Game.Run()
+
+Game.Run() # Initiates the game.
