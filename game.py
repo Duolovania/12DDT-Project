@@ -1,5 +1,7 @@
 from mods import *
 
+# userName: str = input("Please enter your username: ")
+
 window: Application = Application(800, 600, "12DDT") # Creates new window.
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
@@ -7,7 +9,8 @@ mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel
 tommy: Texture = Texture("tommy.JPG", scale = 80)
 music: SFX = SFX("Arcadia.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
-
+randomNum: float = 0
+eshay = 0
 music.LoadMusic()
 score: int = 0 # Game score.
 
@@ -30,9 +33,15 @@ class Game:
         
         window.display.fill((0, 0, 0))
 
+        global eshay
+        eshay += 10
+        
+        # scoreText.rect = pygame.Rect(10, 5)
+
         window.Refresh(tommy)
         scoreText.Refresh(score)
         window.Refresh(scoreText)
+        
         Game.HandleEvents()
     
     # Handles user's keyboard and mouse events.

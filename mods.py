@@ -32,12 +32,12 @@ class Texture:
         self.x: int = x
         self.y: int = y
 
-        self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path), (w * scale, h * scale))
+        self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (w * scale, h * scale))
         self.rect: pygame.Rect = self.surface.get_rect()
     
     # Outputs the image onto the screen.
     def Draw(self, screen: pygame.Surface):
-        screen.blit(self.path, self.rect)
+        screen.blit(self.path, (self.x, self.y), self.rect)
 
 # Class handles all sound properties.
 class SFX:
