@@ -29,20 +29,20 @@ class Game:
 
     # Game loop.
     def Forever():
-        pygame.display.update()
-        
         window.display.fill((0, 0, 0))
-
+        pygame.time.delay(16)
         global eshay
         eshay += 10
-        
-        # scoreText.rect = pygame.Rect(10, 5)
 
-        window.Refresh(tommy)
+        # window.Refresh(tommy)
         scoreText.Refresh(score)
         window.Refresh(scoreText)
+
+        tommy.transform.position.x += 1
+        tommy.Draw(window.display)
         
         Game.HandleEvents()
+        pygame.display.update()
     
     # Handles user's keyboard and mouse events.
     def HandleEvents():

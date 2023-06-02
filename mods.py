@@ -1,5 +1,16 @@
 import pygame
 
+class Vector2:
+    def __init__(self, x: float = 0, y: float = 0):
+        self.x: float = x
+        self.y: float = y
+
+class Transform:
+    def __init__(self, position: Vector2, rotation: Vector2, scale: Vector2):
+        self.position = position
+        self.rotation = rotation
+        self.scale = scale
+
 # Class stores the application's size and label.
 class Application:
     def __init__(self, w: int, h: int, title: str):
@@ -27,17 +38,16 @@ class Application:
 
 # Class handles all image properties.
 class Texture:
-    def __init__(self, path: str, x: int = 0, y: int = 0, w: int = 10, h: int = 10, scale: int = 1):
+    def __init__(self, path: str, w: int = 10, h: int = 10, scale: int = 1):
         self.path: str = "Assets/Images/" + path
-        self.x: int = x
-        self.y: int = y
+        self.transform: Transform = Transform(Vector2(0, 0))
 
         self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (w * scale, h * scale))
         self.rect: pygame.Rect = self.surface.get_rect()
     
     # Outputs the image onto the screen.
     def Draw(self, screen: pygame.Surface):
-        screen.blit(self.path, (self.x, self.y), self.rect)
+        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
 
 # Class handles all sound properties.
 class SFX:
