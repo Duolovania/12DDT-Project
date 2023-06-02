@@ -1,4 +1,5 @@
 from mods import *
+import math
 
 # userName: str = input("Please enter your username: ")
 
@@ -6,7 +7,7 @@ window: Application = Application(800, 600, "12DDT") # Creates new window.
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("tommy.JPG", scale = 80)
+tommy: Texture = Texture("tommy.JPG", scale = 50)
 music: SFX = SFX("Arcadia.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
 randomNum: float = 0
@@ -34,12 +35,12 @@ class Game:
         global eshay
         eshay += 10
 
-        # window.Refresh(tommy)
+        tommy.transform.position.x = math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100
+        tommy.transform.position.y = math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100
+        tommy.Draw(window.display)
+
         scoreText.Refresh(score)
         window.Refresh(scoreText)
-
-        tommy.transform.position.x += 1
-        tommy.Draw(window.display)
         
         Game.HandleEvents()
         pygame.display.update()
@@ -57,14 +58,12 @@ class Game:
                     mousepos = pygame.mouse.get_pos()
                     if scoreText.rect.collidepoint(mousepos):
                         AGuitar.PlayThroughChannel(mouseChannel, volume = 0.8)
+                        global score
+                        score += 1
 
     # Defines what each key press does.
     def KeyEvents(gameEvent: pygame.event):
         match gameEvent.key:
-            case pygame.K_w:
-                AGuitar.Play(volume = 0.8)
-                global score
-                score += 1
             case pygame.K_UP:
                 music.SetMusicVolume(pygame.mixer.music.get_volume() + 0.1)
             case pygame.K_DOWN:

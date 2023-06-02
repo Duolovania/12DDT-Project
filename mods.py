@@ -1,15 +1,22 @@
 import pygame
 
+# Class handles the storage of x and y coordinated.
 class Vector2:
     def __init__(self, x: float = 0, y: float = 0):
         self.x: float = x
         self.y: float = y
 
+# Class handles the storage of positional, rotational and local scale values.
 class Transform:
-    def __init__(self, position: Vector2, rotation: Vector2, scale: Vector2):
+    def __init__(self, position: Vector2 = Vector2(), rotation: Vector2 = Vector2(), localScale: Vector2 = Vector2()):
         self.position = position
         self.rotation = rotation
-        self.scale = scale
+
+        # If localScale argument is 50. localScale will equal to (50, 50)
+        if type(localScale) == float or type(localScale) == int:
+            self.localScale = Vector2(localScale, localScale)
+        else:
+            self.localScale = localScale
 
 # Class stores the application's size and label.
 class Application:
@@ -38,11 +45,11 @@ class Application:
 
 # Class handles all image properties.
 class Texture:
-    def __init__(self, path: str, w: int = 10, h: int = 10, scale: int = 1):
+    def __init__(self, path: str, w: int = 10, h: int = 10, scale: Vector2 = 1):
         self.path: str = "Assets/Images/" + path
-        self.transform: Transform = Transform(Vector2(0, 0))
+        self.transform: Transform = Transform(localScale = scale)
 
-        self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (w * scale, h * scale))
+        self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (w * self.transform.localScale.x, h * self.transform.localScale.y))
         self.rect: pygame.Rect = self.surface.get_rect()
     
     # Outputs the image onto the screen.
