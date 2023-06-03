@@ -8,7 +8,7 @@ class Vector2:
 
 # Class handles the storage of positional, rotational and local scale values.
 class Transform:
-    def __init__(self, position: Vector2 = Vector2(), rotation: Vector2 = Vector2(), localScale: Vector2 = Vector2()):
+    def __init__(self, position: Vector2 = Vector2(), rotation: Vector2 = Vector2(), localScale: Vector2 = Vector2(1, 1)):
         self.position = position
         self.rotation = rotation
 
@@ -20,14 +20,16 @@ class Transform:
 
 # Class stores the application's size and label.
 class Application:
-    def __init__(self, w: int, h: int, title: str):
+    def __init__(self, iconPath: str, w: int, h: int, title: str):
         pygame.init()
 
         self.w: int = w
         self.h: int = h
         self.title: str = title
+        self.iconSurface = pygame.image.load("Assets/Images/" + iconPath) 
         self.display: pygame.Surface = pygame.display.set_mode((w, h))
-
+        
+        pygame.display.set_icon(self.iconSurface)
         pygame.display.set_caption(title)
     
     # Refreshes an object on the screen.
@@ -48,12 +50,18 @@ class Texture:
     def __init__(self, path: str, w: int = 10, h: int = 10, scale: Vector2 = 1):
         self.path: str = "Assets/Images/" + path
         self.transform: Transform = Transform(localScale = scale)
+        self.w = w
+        self.h = h
 
-        self.surface: pygame.Surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (w * self.transform.localScale.x, h * self.transform.localScale.y))
-        self.rect: pygame.Rect = self.surface.get_rect()
+        self.SetRect()
+    
+    def SetRect(self):
+        self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (self.w * self.transform.localScale.x, self.h * self.transform.localScale.y))
+        self.rect = self.surface.get_rect()
     
     # Outputs the image onto the screen.
     def Draw(self, screen: pygame.Surface):
+        self.SetRect()
         screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
 
 # Class handles all sound properties.

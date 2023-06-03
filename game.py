@@ -3,11 +3,11 @@ import math
 
 # userName: str = input("Please enter your username: ")
 
-window: Application = Application(800, 600, "12DDT") # Creates new window.
+window: Application = Application("tommy.JPG", 800, 600, "12DDT") # Creates new window.
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("tommy.JPG", scale = 50)
+tommy: Texture = Texture("tommy.JPG", w = 40)
 music: SFX = SFX("Arcadia.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
 randomNum: float = 0
@@ -33,10 +33,10 @@ class Game:
         window.display.fill((0, 0, 0))
         pygame.time.delay(16)
         global eshay
-        eshay += 10
 
-        tommy.transform.position.x = math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100
-        tommy.transform.position.y = math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100
+        tommy.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 100, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 200)
+        tommy.transform.localScale = Vector2(score / 5, score / 5)
+        
         tommy.Draw(window.display)
 
         scoreText.Refresh(score)
