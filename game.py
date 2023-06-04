@@ -1,7 +1,7 @@
 from mods import *
 import math
 
-# userName: str = input("Please enter your username: ")
+userName: any = input("Please enter your username: ")
 darkPurple: tuple = (67, 37, 52)
 mahogany: tuple = (196, 73, 0)
 wheat: tuple = (239, 214, 172)
@@ -30,8 +30,11 @@ music.LoadMusic()
 score: int = 0 # Game score.
 
 bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
-scoreText: Text = Text(score, bitFont, size = 60, fillColor = celeste)
-scoreText.transform.position.x = 20
+scoreText: Text = Text(score, bitFont, scale = 2, fillColor = celeste)
+scoreText.transform.position = Vector2(20, 0)
+
+userText: Text = Text(userName, bitFont, scale = 2, fillColor = celeste)
+userText.transform.position = Vector2(20, 500)
 
 # Class handles game events.
 class Game:
@@ -48,16 +51,17 @@ class Game:
         pygame.time.delay(16)
 
         scoreText.text = score
-
         tommy.transform.position = Vector2(300, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 50 + 200)
-        background.surface.set_alpha(math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 50)
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
 
         background.Draw(window.display)
         tommy.Draw(window.display)
+
         scoreText.Draw(window.display)
+        userText.Draw(window.display)
+        
         mouseCursor.Draw(window.display)
 
         Game.HandleEvents()

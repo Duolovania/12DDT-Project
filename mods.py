@@ -5,7 +5,7 @@ from abc import ABC, abstractclassmethod
 class Vector2:
     def __init__(self, x: float = 0, y: float = 0):
         self.x: float = x
-        self.y: float = y
+        self.y: float = y 
 
 # Class handles the storage of positional, rotational and local scale values.
 class Transform:
@@ -76,22 +76,25 @@ class Text(GameObject):
     black: tuple = (0, 0, 0)
     white: tuple = (255, 255, 255)
 
-    def __init__(self, textValue: any, path: str, size: float = 32, antiAlias: bool = True, fillColor: tuple = black, borderColor: tuple = None):
+    def __init__(self, textValue: any, path: str, scale: float = 1, antiAlias: bool = False, fillColor: tuple = black, borderColor: tuple = None):
         self.fontPath: str = path
         self.antiAlias: bool = antiAlias
 
         self.fillColor: tuple = fillColor
         self.borderColor: tuple = borderColor
 
-        self.transform: Transform = Transform(localScale = size)
+        self.transform: Transform = Transform(localScale = scale)
         self.text: any = textValue
 
         self.ResetRect()
 
     # Resets the rect. This updates any values in __init__() before text is drawn on screen.
     def ResetRect(self):
-        self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, self.transform.localScale.x)
-        self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (self.transform.localScale.x, self.transform.localScale.y))
+        self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, 64)
+        width = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor).get_width()
+        height = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor).get_height()
+
+        self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (width * self.transform.localScale.x, height * self.transform.localScale.y))
         
         self.rect = self.surface.get_rect()
         self.rect.x = self.transform.position.x
