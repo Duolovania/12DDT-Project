@@ -2,21 +2,30 @@ from mods import *
 import math
 
 # userName: str = input("Please enter your username: ")
+darkPurple: tuple = (67, 37, 52)
+mahogany: tuple = (196, 73, 0)
+wheat: tuple = (239, 214, 172)
+slateGray: tuple = (24, 58, 55)
+richBlack: tuple = (4, 21, 31)
 
 window: Application = Application("tommy.JPG", 800, 600, "12DDT") # Creates new window.
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("tommy.JPG", w = 40)
+tommy: Texture = Texture("thanus.png")
+background: Texture = Texture("backg.png", scale = 1.2)
+
 music: SFX = SFX("Arcadia.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
-randomNum: float = 0
 eshay = 0
+
+music.SetMusicVolume(0.25)
 music.LoadMusic()
 score: int = 0 # Game score.
 
 moonFarkFont: str = "moonfark-font/MOONFARK-goova-studio.ttf" # Font path.
-scoreText: Text = Text(score, moonFarkFont)
+bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
+scoreText: Text = Text(score, bitFont, size = 60)
 
 # Class handles game events.
 class Game:
@@ -34,14 +43,21 @@ class Game:
         pygame.time.delay(16)
         global eshay
 
-        tommy.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 100, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 200)
-        tommy.transform.localScale = Vector2(score / 5, score / 5)
-        
-        tommy.Draw(window.display)
+        scoreText.text = score
 
-        scoreText.Refresh(score)
-        window.Refresh(scoreText)
-        
+        tommy.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 100, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 200)
+        tommy.transform.localScale = Vector2(score / 5, score / 10)
+
+        mousepos = pygame.mouse.get_pos()
+        if scoreText.rect.collidepoint(mousepos):
+            scoreText.fillColor = darkPurple
+        else:
+            scoreText.fillColor = richBlack
+
+        background.Draw(window.display)
+        tommy.Draw(window.display)
+        scoreText.Draw(window.display)
+
         Game.HandleEvents()
         pygame.display.update()
     

@@ -28,40 +28,57 @@ class Application:
         self.title: str = title
         self.iconSurface = pygame.image.load("Assets/Images/" + iconPath) 
         self.display: pygame.Surface = pygame.display.set_mode((w, h))
-        
+
         pygame.display.set_icon(self.iconSurface)
+        pygame.mouse.set_cursor(pygame.cursors.broken_x)
         pygame.display.set_caption(title)
-    
-    # Refreshes an object on the screen.
-    def Refresh(self, refreshedObj: object):
-        if not hasattr(refreshedObj, "surface"):
-            print("The object does not have a surface variable. Variable of type '{0}' cannot be refreshed.".format(type(refreshedObj)))
-            return
-        elif refreshedObj is None:
-            print("The object is null. Variable of type '{0}' cannot be refreshed.".format(type(refreshedObj)))
-            return
-        
-        objSurface: pygame.Surface = refreshedObj.surface
-        objRect: pygame.Rect = objSurface.get_rect()
-        self.display.blit(objSurface, objRect)
 
 # Class handles all image properties.
 class Texture:
-    def __init__(self, path: str, w: int = 10, h: int = 10, scale: Vector2 = 1):
+    def __init__(self, path: str, scale: Vector2 = 1):
         self.path: str = "Assets/Images/" + path
         self.transform: Transform = Transform(localScale = scale)
-        self.w = w
-        self.h = h
 
-        self.SetRect()
+        self.ResetRect()
     
-    def SetRect(self):
-        self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (self.w * self.transform.localScale.x, self.h * self.transform.localScale.y))
+    # Resets the rect. This updates any values in __init__() before image is drawn on screen.
+    def ResetRect(self):
+        self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (pygame.image.load(self.path).get_width() * self.transform.localScale.x, pygame.image.load(self.path).get_height() * self.transform.localScale.y))
         self.rect = self.surface.get_rect()
     
     # Outputs the image onto the screen.
     def Draw(self, screen: pygame.Surface):
-        self.SetRect()
+        self.ResetRect()
+        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
+
+# Class handles all text properties.
+class Text:
+    green: tuple = (0, 255, 0)
+    blue: tuple = (0, 0, 128)
+    black: tuple = (0, 0, 0)
+    white: tuple = (255, 255, 255)
+
+    def __init__(self, textValue: any, path: str, size: float = 32, antiAlias: bool = True, fillColor: tuple = black, borderColor: tuple = None):
+        self.fontPath: str = path
+        self.antiAlias: bool = antiAlias
+
+        self.fillColor: tuple = fillColor
+        self.borderColor: tuple = borderColor
+
+        self.transform: Transform = Transform(localScale = size)
+        self.text: any = textValue
+
+        self.ResetRect()
+
+    # Resets the rect. This updates any values in __init__() before text is drawn on screen.
+    def ResetRect(self):
+        self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, self.transform.localScale.x)
+        self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (self.transform.localScale.x, self.transform.localScale.y))
+        self.rect = self.surface.get_rect()     
+
+    # Outputs the image onto the screen.
+    def Draw(self, screen: pygame.Surface):
+        self.ResetRect()
         screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
 
 # Class handles all sound properties.
@@ -88,24 +105,3 @@ class SFX:
     # Sets the music volume.
     def SetMusicVolume(self, volume: float):
         pygame.mixer.music.set_volume(volume)
-
-# Class handles all text properties.
-class Text:
-    green: tuple = (0, 255, 0)
-    blue: tuple = (0, 0, 128)
-    white: tuple = (0, 0, 0)
-
-    def __init__(self, textValue: any, path: str, size: float = 32, antiAlias: bool = True, fillColor: tuple = white, borderColor: tuple = green):
-        self.fontPath: str = path
-        self.fontSize: int = size
-        self.antiAlias: bool = antiAlias
-        self.fillColor: tuple = fillColor
-        self.borderColor: tuple = borderColor
-
-        self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + path, size)
-        self.surface: pygame.Surface = self.fontObj.render(str(textValue), antiAlias, fillColor, borderColor)
-        self.rect: pygame.rect = self.surface.get_rect()
-    
-    # Sets new text value.
-    def Refresh(self, newValue: any, hasAA: bool = True, newFill: tuple = white, newBorder: tuple = green):
-        self.surface = self.fontObj.render(str(newValue), hasAA, newFill, newBorder)
