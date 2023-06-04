@@ -21,6 +21,7 @@ class Transform:
 # Class stores the application's size and label.
 class Application:
     def __init__(self, iconPath: str, w: int, h: int, title: str):
+        pygame.mixer.pre_init(44100, 16, 2, 4096)
         pygame.init()
 
         self.w: int = w
@@ -30,7 +31,7 @@ class Application:
         self.display: pygame.Surface = pygame.display.set_mode((w, h))
 
         pygame.display.set_icon(self.iconSurface)
-        pygame.mouse.set_cursor(pygame.cursors.broken_x)
+        pygame.mouse.set_visible(False)
         pygame.display.set_caption(title)
 
 # Class handles all image properties.
@@ -53,8 +54,6 @@ class Texture:
 
 # Class handles all text properties.
 class Text:
-    green: tuple = (0, 255, 0)
-    blue: tuple = (0, 0, 128)
     black: tuple = (0, 0, 0)
     white: tuple = (255, 255, 255)
 

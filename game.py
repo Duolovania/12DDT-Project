@@ -13,9 +13,10 @@ gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
 tommy: Texture = Texture("thanus.png")
+mouseCursor: Texture = Texture("cursor.png", scale = 0.3)
 background: Texture = Texture("backg.png", scale = 1.2)
 
-music: SFX = SFX("Arcadia.mp3") # Background music.
+music: SFX = SFX("bad.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
 eshay = 0
 
@@ -49,6 +50,8 @@ class Game:
         tommy.transform.localScale = Vector2(score / 5, score / 10)
 
         mousepos = pygame.mouse.get_pos()
+        mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
+
         if scoreText.rect.collidepoint(mousepos):
             scoreText.fillColor = darkPurple
         else:
@@ -57,6 +60,7 @@ class Game:
         background.Draw(window.display)
         tommy.Draw(window.display)
         scoreText.Draw(window.display)
+        mouseCursor.Draw(window.display)
 
         Game.HandleEvents()
         pygame.display.update()
@@ -73,7 +77,7 @@ class Game:
                 case pygame.MOUSEBUTTONDOWN:
                     mousepos = pygame.mouse.get_pos()
                     if scoreText.rect.collidepoint(mousepos):
-                        AGuitar.PlayThroughChannel(mouseChannel, volume = 0.8)
+                        AGuitar.PlayThroughChannel(mouseChannel, volume = 0.25)
                         global score
                         score += 1
 
