@@ -32,7 +32,7 @@ class Application:
         self.display: pygame.Surface = pygame.display.set_mode((w, h))
 
         pygame.display.set_icon(self.iconSurface)
-        pygame.mouse.set_visible(False)
+        # pygame.mouse.set_visible(False)
         pygame.display.set_caption(title)
 
 # Blueprint abstract class for visual objects (objects on screen).
@@ -45,7 +45,7 @@ class GameObject(ABC):
     # Outputs the object onto the screen.
     def Draw(self, screen: pygame.Surface):
         self.ResetRect()
-        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
+        screen.blit(self.surface, self.rect)
 
 # Class handles all image properties. Inherits GameObject Draw().
 class Texture(GameObject):
@@ -57,8 +57,14 @@ class Texture(GameObject):
     
     # Resets the rect. This updates any values in __init__() before image is drawn on screen.
     def ResetRect(self):
-        self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (pygame.image.load(self.path).get_width() * self.transform.localScale.x, pygame.image.load(self.path).get_height() * self.transform.localScale.y))
+        if ".png" in self.path:
+            self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (pygame.image.load(self.path).convert_alpha().get_width() * self.transform.localScale.x, pygame.image.load(self.path).convert_alpha().get_height() * self.transform.localScale.y))
+        else:
+            self.surface = pygame.transform.scale(pygame.image.load(self.path).convert(), (pygame.image.load(self.path).convert().get_width() * self.transform.localScale.x, pygame.image.load(self.path).convert().get_height() * self.transform.localScale.y))
+
         self.rect = self.surface.get_rect()
+        self.rect.x = self.transform.position.x
+        self.rect.y = self.transform.position.y
 
 # Class handles all text properties. Inherits GameObject Draw().
 class Text(GameObject):
@@ -81,7 +87,11 @@ class Text(GameObject):
     def ResetRect(self):
         self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, self.transform.localScale.x)
         self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (self.transform.localScale.x, self.transform.localScale.y))
-        self.rect = self.surface.get_rect()     
+        
+        self.rect = self.surface.get_rect()
+        self.rect.x = self.transform.position.x
+        self.rect.y = self.transform.position.y
+             
 
 # Class handles all sound properties.
 class SFX:

@@ -12,21 +12,20 @@ window: Application = Application("tommy.JPG", 800, 600, "12DDT") # Creates new 
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("thanus.png")
+tommy: Texture = Texture("wickedwing.png", scale = 0.35)
 mouseCursor: Texture = Texture("cursor.png", scale = 0.3)
-background: Texture = Texture("backg.png", scale = 1.2)
+background: Texture = Texture("buff-min.png", scale = 1.2)
+background.transform.position = Vector2(-170, 0)
 
-music: SFX = SFX("bad.mp3") # Background music.
+music: SFX = SFX("ov.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
-eshay = 0
 
 music.SetMusicVolume(0.25)
 music.LoadMusic()
 score: int = 0 # Game score.
 
-moonFarkFont: str = "moonfark-font/MOONFARK-goova-studio.ttf" # Font path.
 bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
-scoreText: Text = Text(score, bitFont, size = 60)
+scoreText: Text = Text(score, bitFont, size = 60, fillColor = wheat)
 
 # Class handles game events.
 class Game:
@@ -34,7 +33,6 @@ class Game:
     def Run():
         while gameRunning:
             Game.Forever()
-        
         pygame.quit()
         quit()
 
@@ -42,20 +40,14 @@ class Game:
     def Forever():
         window.display.fill((0, 0, 0))
         pygame.time.delay(16)
-        global eshay
 
         scoreText.text = score
 
-        tommy.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 100, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 100 + 200)
-        tommy.transform.localScale = Vector2(score / 5, score / 10)
+        tommy.transform.position = Vector2(300, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 50 + 200)
+        background.surface.set_alpha(math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 50 + 200)
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
-
-        if scoreText.rect.collidepoint(mousepos):
-            scoreText.fillColor = darkPurple
-        else:
-            scoreText.fillColor = richBlack
 
         background.Draw(window.display)
         tommy.Draw(window.display)
@@ -76,10 +68,11 @@ class Game:
                     Game.KeyEvents(event)
                 case pygame.MOUSEBUTTONDOWN:
                     mousepos = pygame.mouse.get_pos()
-                    if scoreText.rect.collidepoint(mousepos):
+                    if tommy.rect.collidepoint(mousepos):
                         AGuitar.PlayThroughChannel(mouseChannel, volume = 0.25)
                         global score
                         score += 1
+                    
 
     # Defines what each key press does.
     def KeyEvents(gameEvent: pygame.event):
