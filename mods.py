@@ -1,4 +1,5 @@
 import pygame
+from abc import ABC, abstractclassmethod
 
 # Class handles the storage of x and y coordinated.
 class Vector2:
@@ -34,8 +35,20 @@ class Application:
         pygame.mouse.set_visible(False)
         pygame.display.set_caption(title)
 
-# Class handles all image properties.
-class Texture:
+# Blueprint abstract class for visual objects (objects on screen).
+class GameObject(ABC):
+    # Abstract method. Must be implemented in child.
+    @abstractclassmethod
+    def ResetRect(self):
+        pass
+
+    # Outputs the object onto the screen.
+    def Draw(self, screen: pygame.Surface):
+        self.ResetRect()
+        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
+
+# Class handles all image properties. Inherits GameObject Draw().
+class Texture(GameObject):
     def __init__(self, path: str, scale: Vector2 = 1):
         self.path: str = "Assets/Images/" + path
         self.transform: Transform = Transform(localScale = scale)
@@ -46,14 +59,9 @@ class Texture:
     def ResetRect(self):
         self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (pygame.image.load(self.path).get_width() * self.transform.localScale.x, pygame.image.load(self.path).get_height() * self.transform.localScale.y))
         self.rect = self.surface.get_rect()
-    
-    # Outputs the image onto the screen.
-    def Draw(self, screen: pygame.Surface):
-        self.ResetRect()
-        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
 
-# Class handles all text properties.
-class Text:
+# Class handles all text properties. Inherits GameObject Draw().
+class Text(GameObject):
     black: tuple = (0, 0, 0)
     white: tuple = (255, 255, 255)
 
@@ -74,11 +82,6 @@ class Text:
         self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, self.transform.localScale.x)
         self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (self.transform.localScale.x, self.transform.localScale.y))
         self.rect = self.surface.get_rect()     
-
-    # Outputs the image onto the screen.
-    def Draw(self, screen: pygame.Surface):
-        self.ResetRect()
-        screen.blit(self.surface, (self.transform.position.x, self.transform.position.y), self.rect)
 
 # Class handles all sound properties.
 class SFX:
