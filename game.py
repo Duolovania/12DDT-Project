@@ -1,7 +1,7 @@
 from mods import *
 import math
 
-userName: any = input("Please enter your username: ")
+# userName: any = input("Please enter your username: ")
 darkPurple: tuple = (67, 37, 52)
 mahogany: tuple = (196, 73, 0)
 wheat: tuple = (239, 214, 172)
@@ -17,10 +17,12 @@ window: Application = Application("tommy.JPG", 800, 600, 0, "12DDT", False) # Cr
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("wickedwing.png", scale = 0.35)
+tommy: Texture = Texture("aang_test.png", scale = 1.6)
 mouseCursor: Texture = Texture("mouse cursor.png", scale = 1.2)
 background: Texture = Texture("back.png", scale = 3)
 background.transform.position = Vector2(-10, 0)
+
+currentAlbum: Texture = Texture("Albums/tame impla.png", scale = 1)
 
 music: SFX = SFX("ov.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
@@ -33,8 +35,8 @@ bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
 scoreText: Text = Text(score, bitFont, scale = 2, fillColor = celeste)
 scoreText.transform.position = Vector2(20, 0)
 
-userText: Text = Text(userName, bitFont, scale = 2, fillColor = celeste)
-userText.transform.position = Vector2(20, 500)
+userText: Text = Text("Guess the artist", bitFont, scale = 1.5, fillColor = celeste)
+userText.transform.position = Vector2(40, 520)
 
 # Class handles game events.
 class Game:
@@ -51,13 +53,13 @@ class Game:
         pygame.time.delay(16)
 
         scoreText.text = score
-        tommy.transform.position = Vector2(300, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 50 + 200)
+        currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
 
         background.Draw(window.display)
-        tommy.Draw(window.display)
+        currentAlbum.Draw(window.display)
 
         scoreText.Draw(window.display)
         userText.Draw(window.display)
