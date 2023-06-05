@@ -23,6 +23,10 @@ background.transform.position = Vector2(-10, 0)
 
 currentAlbum: Texture = Texture("Albums/Tame Impala.png", scale = 1)
 albums = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
+btn1Options = ["Tame Impala", "Kendrick Lamar", "Billy Joel", "Bruno Mars", "twenty one pilots", "Da Baby", "The Weeknd", "", "Don Toliver", "Post Malone again"]
+btn2Options = ["DJ Khaled", "Rihanna", "Morgan Wallen", "Lil Baby", "Fleetwood Mac", "Queen", "Lil Nas X", "Post Malone", "", ""]
+btn3Options = ["Glass Animals", "Elton John", "Lauv", "Kendrick Lamar", "Rod Stewart", "J. Cole", "The Weeknd", "", "", ""]
+btn4Options = ["Maroon 5", "Taylor Swift", "Social House", "Da Baby", "Barbra Streisand", "Michael Jackson", "Drake", "", "", ""]
 
 music: SFX = SFX("ov.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
@@ -59,7 +63,7 @@ class Game:
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
         currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
-        option1.text = albums[questionNum]
+        option1.text = btn1Options[questionNum]
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
