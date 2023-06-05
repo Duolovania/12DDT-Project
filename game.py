@@ -17,12 +17,12 @@ window: Application = Application("tommy.JPG", 800, 600, 0, "12DDT", False) # Cr
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
-tommy: Texture = Texture("aang_test.png", scale = 1.6)
 mouseCursor: Texture = Texture("mouse cursor.png", scale = 1.2)
 background: Texture = Texture("back.png", scale = 3)
 background.transform.position = Vector2(-10, 0)
 
-currentAlbum: Texture = Texture("Albums/tame impla.png", scale = 1)
+currentAlbum: Texture = Texture("Albums/Tame Impala.png", scale = 1)
+albums = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
 
 music: SFX = SFX("ov.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
@@ -30,13 +30,17 @@ AGuitar: SFX = SFX("a.wav")
 music.SetMusicVolume(0.25)
 music.LoadMusic()
 score: int = 0 # Game score.
+questionNum: int = 0
 
 bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
 scoreText: Text = Text(score, bitFont, scale = 2, fillColor = celeste)
 scoreText.transform.position = Vector2(20, 0)
 
-userText: Text = Text("Guess the artist", bitFont, scale = 1.5, fillColor = celeste)
-userText.transform.position = Vector2(40, 520)
+questionText: Text = Text("Guess the artist", bitFont, scale = 1.5, fillColor = celeste)
+questionText.transform.position = Vector2(40, 520)
+
+option1: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = amethyst)
+option1.transform.position = Vector2(40, 380)
 
 # Class handles game events.
 class Game:
@@ -54,6 +58,8 @@ class Game:
 
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
+        currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
+        option1.text = albums[questionNum]
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
@@ -62,7 +68,8 @@ class Game:
         currentAlbum.Draw(window.display)
 
         scoreText.Draw(window.display)
-        userText.Draw(window.display)
+        questionText.Draw(window.display)
+        option1.Draw(window.display)
         
         mouseCursor.Draw(window.display)
 
@@ -80,10 +87,10 @@ class Game:
                     Game.KeyEvents(event)
                 case pygame.MOUSEBUTTONDOWN:
                     mousepos = pygame.mouse.get_pos()
-                    if tommy.rect.collidepoint(mousepos):
-                        AGuitar.PlayThroughChannel(mouseChannel, volume = 0.25)
-                        global score
-                        score += 1
+                    if option1.rect.collidepoint(mousepos):
+                        AGuitar.Play(volume = 0.25)
+                        global questionNum
+                        questionNum += 1
                     
 
     # Defines what each key press does.
