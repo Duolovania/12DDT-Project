@@ -90,10 +90,11 @@ class Text(GameObject):
     # Resets the rect. This updates any values in __init__() before text is drawn on screen.
     def ResetRect(self):
         self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, 64)
-        width = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor).get_width()
-        height = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor).get_height()
+        renderedText: pygame.Surface = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor)
+        width = renderedText.get_width()
+        height = renderedText.get_height()
 
-        self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (width * self.transform.localScale.x, height * self.transform.localScale.y))
+        self.surface = pygame.transform.scale(renderedText, (width * self.transform.localScale.x, height * self.transform.localScale.y))
         
         self.rect = self.surface.get_rect()
              
