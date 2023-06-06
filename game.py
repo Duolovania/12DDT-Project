@@ -23,10 +23,10 @@ background.transform.position = Vector2(-10, 0)
 
 currentAlbum: Texture = Texture("Albums/Tame Impala.png", scale = 1)
 albums = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
-btn1Options = ["Tame Impala", "Kendrick Lamar", "Billy Joel", "Bruno Mars", "twenty one pilots", "Da Baby", "The Weeknd", "", "Don Toliver", "Post Malone again"]
-btn2Options = ["DJ Khaled", "Rihanna", "Morgan Wallen", "Lil Baby", "Fleetwood Mac", "Queen", "Lil Nas X", "Post Malone", "", ""]
-btn3Options = ["Glass Animals", "Elton John", "Lauv", "Kendrick Lamar", "Rod Stewart", "J. Cole", "The Weeknd", "", "", ""]
-btn4Options = ["Maroon 5", "Taylor Swift", "Social House", "Da Baby", "Barbra Streisand", "Michael Jackson", "Drake", "", "", ""]
+btn1Options = ["Tame Impala", "Kendrick Lamar", "Billy Joel", "Bruno Mars", "twenty one pilots", "Da Baby", "The Weeknd", "Thomas Rhett", "Don Toliver", "Post Malone again"]
+btn2Options = ["DJ Khaled", "Rihanna", "Morgan Wallen", "Lil Baby", "Fleetwood Mac", "Queen", "Lil Nas X", "Post Malone", "Janet Jackson", "Jack Black"]
+btn3Options = ["Glass Animals", "Elton John", "Lauv", "Kendrick Lamar", "Rod Stewart", "J. Cole", "The Weekend", "Swae Lee", "Drake", "Lil Nas X"]
+btn4Options = ["Maroon 5", "Taylor Swift", "Social House", "Da Baby", "Barbra Streisand", "Michael Jackson", "Drake", "Justin Moore", "Da Baby", "Lauv"]
 
 music: SFX = SFX("ov.mp3") # Background music.
 AGuitar: SFX = SFX("a.wav")
@@ -44,7 +44,16 @@ questionText: Text = Text("Guess the artist", bitFont, scale = 1.5, fillColor = 
 questionText.transform.position = Vector2(40, 520)
 
 option1: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = amethyst)
-option1.transform.position = Vector2(40, 380)
+option1.transform.position = Vector2(40, 360)
+
+option2: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = wisteria)
+option2.transform.position = Vector2(40, 400)
+
+option3: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = richBlack)
+option3.transform.position = Vector2(40, 440)
+
+option4: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = richBlack)
+option4.transform.position = Vector2(40, 480)
 
 # Class handles game events.
 class Game:
@@ -63,7 +72,11 @@ class Game:
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
         currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
+
         option1.text = btn1Options[questionNum]
+        option2.text = btn2Options[questionNum]
+        option3.text = btn3Options[questionNum]
+        option4.text = btn4Options[questionNum]
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
@@ -73,7 +86,11 @@ class Game:
 
         scoreText.Draw(window.display)
         questionText.Draw(window.display)
+
         option1.Draw(window.display)
+        option2.Draw(window.display)
+        option3.Draw(window.display)
+        option4.Draw(window.display)
         
         mouseCursor.Draw(window.display)
 
@@ -92,9 +109,32 @@ class Game:
                 case pygame.MOUSEBUTTONDOWN:
                     mousepos = pygame.mouse.get_pos()
                     if option1.rect.collidepoint(mousepos):
-                        AGuitar.Play(volume = 0.25)
-                        global questionNum
-                        questionNum += 1
+                        Game.CheckAnswer(option1.text)
+                    elif option2.rect.collidepoint(mousepos):
+                        Game.CheckAnswer(option2.text)
+                    elif option3.rect.collidepoint(mousepos):
+                        Game.CheckAnswer(option3.text)
+                    elif option4.rect.collidepoint(mousepos):
+                        Game.CheckAnswer(option4.text)
+
+    # Checks if user picks the correct answer.
+    def CheckAnswer(text: str):
+        global questionNum
+        AGuitar.Play(volume = 0.25)
+
+        if text == albums[questionNum]:
+            scoreText.transform.localScale = Vector2(4, 4)
+            
+            global score
+            score += 1
+
+            pygame.time.wait(50)
+            scoreText.transform.localScale = Vector2(2, 2)
+        else:
+            score -= 1
+            pygame.time.wait(50)
+        
+        questionNum += 1
                     
 
     # Defines what each key press does.
