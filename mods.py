@@ -1,7 +1,7 @@
 import pygame
 from abc import ABC, abstractclassmethod
 
-# Class handles the storage of x and y coordinated.
+# Class handles the storage of x and y coordinates.
 class Vector2:
     def __init__(self, x: float = 0, y: float = 0):
         self.x: float = x
@@ -49,7 +49,9 @@ class GameObject(ABC):
 
     # Outputs the object onto the screen.
     def Draw(self, screen: pygame.Surface):
-        self.ResetRect()
+        # self.ResetRect()
+        self.rect.x = self.transform.position.x
+        self.rect.y = self.transform.position.y
         screen.blit(self.surface, self.rect)
 
 # Class handles all image properties. Inherits GameObject Draw().
@@ -62,14 +64,11 @@ class Texture(GameObject):
     
     # Resets the rect. This updates any values in __init__() before image is drawn on screen.
     def ResetRect(self):
-        if ".png" in self.path:
-            self.surface = pygame.transform.scale(pygame.image.load(self.path).convert_alpha(), (pygame.image.load(self.path).convert_alpha().get_width() * self.transform.localScale.x, pygame.image.load(self.path).convert_alpha().get_height() * self.transform.localScale.y))
-        else:
-            self.surface = pygame.transform.scale(pygame.image.load(self.path).convert(), (pygame.image.load(self.path).convert().get_width() * self.transform.localScale.x, pygame.image.load(self.path).convert().get_height() * self.transform.localScale.y))
+        self.image: pygame.Surface = pygame.image.load(self.path).convert_alpha()
+        self.surface = pygame.transform.scale(self.image, (self.image.get_width() * self.transform.localScale.x, self.image.get_height() * self.transform.localScale.y))
 
         self.rect = self.surface.get_rect()
-        self.rect.x = self.transform.position.x
-        self.rect.y = self.transform.position.y
+        
 
 # Class handles all text properties. Inherits GameObject Draw().
 class Text(GameObject):
@@ -97,8 +96,6 @@ class Text(GameObject):
         self.surface = pygame.transform.scale(self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor), (width * self.transform.localScale.x, height * self.transform.localScale.y))
         
         self.rect = self.surface.get_rect()
-        self.rect.x = self.transform.position.x
-        self.rect.y = self.transform.position.y
              
 
 # Class handles all sound properties.

@@ -13,7 +13,7 @@ wisteria: tuple = (178, 152, 220)
 amethyst: tuple = (166, 99, 204)
 grape: tuple = (111, 45, 189)
 
-window: Application = Application("tommy.JPG", 800, 600, 0, "12DDT", False) # Creates new window.
+window: Application = Application("warning.png", 800, 600, 0, "12DDT", False) # Creates new window.
 gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
@@ -29,31 +29,41 @@ btn3Options = ["Glass Animals", "Elton John", "Lauv", "Kendrick Lamar", "Rod Ste
 btn4Options = ["Maroon 5", "Taylor Swift", "Social House", "Da Baby", "Barbra Streisand", "Michael Jackson", "Drake", "Justin Moore", "Da Baby", "Lauv"]
 
 music: SFX = SFX("ov.mp3") # Background music.
-AGuitar: SFX = SFX("a.wav")
+
+rightAns: SFX = SFX("Right.wav")
+wrongAns: SFX = SFX("Wrong.wav")
 
 music.SetMusicVolume(0.25)
 music.LoadMusic()
 score: int = 0 # Game score.
 questionNum: int = 0
 
-bitFont: str = "8_bit_arcade/8-bit Arcade In.ttf"
-scoreText: Text = Text(score, bitFont, scale = 2, fillColor = celeste)
-scoreText.transform.position = Vector2(20, 0)
+bitFont: str = "nokia_cellphone/nokiafc22.ttf"
+scoreText: Text = Text(score, bitFont, scale = 1, fillColor = celeste)
+scoreText.transform.position = Vector2(20, 20)
 
-questionText: Text = Text("Guess the artist", bitFont, scale = 1.5, fillColor = celeste)
+optionSize = 0.5
+
+questionText: Text = Text("Guess the artist", bitFont, scale = 1, fillColor = celeste)
 questionText.transform.position = Vector2(40, 520)
 
-option1: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = amethyst)
+option1: Text = Text(btn1Options[questionNum], bitFont, scale = optionSize, fillColor = amethyst)
 option1.transform.position = Vector2(40, 360)
 
-option2: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = wisteria)
-option2.transform.position = Vector2(40, 400)
+option2: Text = Text(btn2Options[questionNum], bitFont, scale = optionSize, fillColor = wisteria)
+option2.transform.position = Vector2(40, 410)
 
-option3: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = richBlack)
-option3.transform.position = Vector2(40, 440)
+option3: Text = Text(btn3Options[questionNum], bitFont, scale = optionSize, fillColor = richBlack)
+option3.transform.position = Vector2(40, 450)
 
-option4: Text = Text("Tame Impala", bitFont, scale = 1, fillColor = richBlack)
-option4.transform.position = Vector2(40, 480)
+option4: Text = Text(btn4Options[questionNum], bitFont, scale = optionSize, fillColor = richBlack)
+option4.transform.position = Vector2(40, 490)
+
+currentAlbum.ResetRect()
+option1.ResetRect()
+option2.ResetRect()
+option3.ResetRect()
+option4.ResetRect()
 
 # Class handles game events.
 class Game:
@@ -120,21 +130,26 @@ class Game:
     # Checks if user picks the correct answer.
     def CheckAnswer(text: str):
         global questionNum
-        AGuitar.Play(volume = 0.25)
+        global score
 
         if text == albums[questionNum]:
-            scoreText.transform.localScale = Vector2(4, 4)
-            
-            global score
             score += 1
-
-            pygame.time.wait(50)
-            scoreText.transform.localScale = Vector2(2, 2)
+            rightAns.Play(volume = 0.25)
+            pygame.time.wait(50)            
         else:
             score -= 1
+            wrongAns.Play(volume = 0.25)
             pygame.time.wait(50)
+
+        scoreText.ResetRect()
         
         questionNum += 1
+
+        currentAlbum.ResetRect()
+        option1.ResetRect()
+        option2.ResetRect()
+        option3.ResetRect()
+        option4.ResetRect()
                     
 
     # Defines what each key press does.
