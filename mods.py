@@ -49,7 +49,6 @@ class GameObject(ABC):
 
     # Outputs the object onto the screen.
     def Draw(self, screen: pygame.Surface):
-        # self.ResetRect()
         self.rect.x = self.transform.position.x
         self.rect.y = self.transform.position.y
         screen.blit(self.surface, self.rect)

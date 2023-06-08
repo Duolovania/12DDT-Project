@@ -59,6 +59,8 @@ option3.transform.position = Vector2(40, 450)
 option4: Text = Text(btn4Options[questionNum], bitFont, scale = optionSize, fillColor = richBlack)
 option4.transform.position = Vector2(40, 490)
 
+refreshAll: bool = False
+
 # Class handles game events.
 class Game:
     # Function controls game loop and closes window after game loop is terminated.
@@ -75,15 +77,17 @@ class Game:
 
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
-        currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
+        if questionNum < len(albums) - 1: currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
 
-        print(questionNum)
+        if questionNum < len(albums) - 1:
+            option1.text = btn1Options[questionNum]
+            option2.text = btn2Options[questionNum]
+            option3.text = btn3Options[questionNum]
+            option4.text = btn4Options[questionNum]
 
-        option1.text = btn1Options[questionNum]
-        option2.text = btn2Options[questionNum]
-        option3.text = btn3Options[questionNum]
-        option4.text = btn4Options[questionNum]
-
+        if refreshAll:
+            Game.RefreshAll()
+        
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
 
@@ -102,6 +106,18 @@ class Game:
 
         Game.HandleEvents()
         pygame.display.update()
+
+    # Refreshes all GameObjects.
+    def RefreshAll():
+        scoreText.ResetRect()
+        currentAlbum.ResetRect()
+        option1.ResetRect()
+        option2.ResetRect()
+        option3.ResetRect()
+        option4.ResetRect()
+
+        global refreshAll
+        refreshAll = False
     
     # Handles user's keyboard and mouse events.
     def HandleEvents():
@@ -126,27 +142,24 @@ class Game:
     # Checks if user picks the correct answer.
     def CheckAnswer(text: str):
         global questionNum
+        global refreshAll
         global score
 
+        if questionNum > len(albums) - 1:
+            return
+
         if text == albums[questionNum]:
+            print("YESSSSSSS")
             score += 1
             rightAns.Play(volume = 0.25)
-            # pygame.time.wait(50)            
+            pygame.time.wait(50)            
         else:
             score -= 1
             wrongAns.Play(volume = 0.25)
-            # pygame.time.wait(50)
+            pygame.time.wait(50)
 
-        scoreText.ResetRect()
-        
+        refreshAll = True
         questionNum += 1
-
-        currentAlbum.ResetRect()
-        option1.ResetRect()
-        option2.ResetRect()
-        option3.ResetRect()
-        option4.ResetRect()
-                    
 
     # Defines what each key press does.
     def KeyEvents(gameEvent: pygame.event):
