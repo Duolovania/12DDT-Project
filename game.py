@@ -25,15 +25,15 @@ mouseCursor: Texture = Texture("mouse cursor.png", scale = 1.2)
 background: Texture = Texture("back.png", scale = 3)
 background.transform.position = Vector2(-10, 0)
 
-albums = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
+answers = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
 btn1Options = ["Tame Impala", "Kendrick Lamar", "Billy Joel", "Bruno Mars", "twenty one pilots", "Da Baby", "The Weeknd", "Thomas Rhett", "Don Toliver", "Post Malone again"]
 btn2Options = ["DJ Khaled", "Rihanna", "Morgan Wallen", "Lil Baby", "Fleetwood Mac", "Queen", "Lil Nas X", "Post Malone", "Janet Jackson", "Jack Black"]
 btn3Options = ["Glass Animals", "Elton John", "Lauv", "Kendrick Lamar", "Rod Stewart", "J. Cole", "The Weekend", "Swae Lee", "Drake", "Lil Nas X"]
 btn4Options = ["Maroon 5", "Taylor Swift", "Social House", "Da Baby", "Barbra Streisand", "Michael Jackson", "Drake", "Justin Moore", "Da Baby", "Lauv"]
 
-currentAlbum: Texture = Texture("Albums/" + albums[questionNum] + ".png", scale = 1)
+currentAlbum: Texture = Texture("Albums/" + answers[questionNum] + ".png", scale = 1)
 
-music: SFX = SFX("ov.mp3") # Background music.
+music: SFX = SFX("Kubbi - Up In My Jam  NO COPYRIGHT 8-bit Music.mp3") # Background music.
 rightAns: SFX = SFX("Right.wav")
 wrongAns: SFX = SFX("Wrong.wav")
 
@@ -77,9 +77,9 @@ class Game:
 
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
-        if questionNum < len(albums) - 1: currentAlbum.path = "Assets/Images/Albums/" + albums[questionNum] + ".png"
+        if questionNum < len(answers) - 1: currentAlbum.path = "Assets/Images/Albums/" + answers[questionNum] + ".png"
 
-        if questionNum < len(albums) - 1:
+        if questionNum < len(answers) - 1:
             option1.text = btn1Options[questionNum]
             option2.text = btn2Options[questionNum]
             option3.text = btn3Options[questionNum]
@@ -145,10 +145,10 @@ class Game:
         global refreshAll
         global score
 
-        if questionNum > len(albums) - 1:
+        if questionNum > len(answers) - 1:
             return
 
-        if text == albums[questionNum]:
+        if text == answers[questionNum]:
             print("YESSSSSSS")
             score += 1
             rightAns.Play(volume = 0.25)
