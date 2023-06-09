@@ -77,9 +77,10 @@ class Game:
 
         scoreText.text = score
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
-        if questionNum < len(answers) - 1: currentAlbum.path = "Assets/Images/Albums/" + answers[questionNum] + ".png"
 
         if questionNum < len(answers) - 1:
+            currentAlbum.path = "Assets/Images/Albums/" + answers[questionNum] + ".png"
+
             option1.text = btn1Options[questionNum]
             option2.text = btn2Options[questionNum]
             option3.text = btn3Options[questionNum]
@@ -149,7 +150,6 @@ class Game:
             return
 
         if text == answers[questionNum]:
-            print("YESSSSSSS")
             score += 1
             rightAns.Play(volume = 0.25)
             pygame.time.wait(50)            
