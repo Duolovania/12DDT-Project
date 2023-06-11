@@ -44,6 +44,9 @@ bitFont: str = "nokia_cellphone/nokiafc22.ttf"
 scoreText: Text = Text(score, bitFont, scale = 1, fillColor = celeste)
 scoreText.transform.position = Vector2(20, 20)
 
+fpsText: Text = Text(score, bitFont, scale = 0.4, fillColor = mahogany)
+fpsText.transform.position = Vector2(680, 20)
+
 questionText: Text = Text("Guess the artist", bitFont, scale = 1, fillColor = celeste)
 questionText.transform.position = Vector2(40, 520)
 
@@ -60,6 +63,7 @@ option4: Text = Text(btn4Options[questionNum], bitFont, scale = optionSize, fill
 option4.transform.position = Vector2(40, 490)
 
 refreshAll: bool = False
+clock = pygame.time.Clock()
 
 # Class handles game events.
 class Game:
@@ -75,7 +79,9 @@ class Game:
         window.display.fill((0, 0, 0))
         pygame.time.delay(16)
 
+        clock.tick(60)
         scoreText.text = score
+        fpsText.text = "FPS: " + str(int(clock.get_fps()))
         currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
 
         if questionNum < len(answers) - 1:
@@ -97,6 +103,9 @@ class Game:
 
         scoreText.Draw(window.display)
         questionText.Draw(window.display)
+
+        fpsText.ResetRect()
+        fpsText.Draw(window.display)
 
         option1.Draw(window.display)
         option2.Draw(window.display)
