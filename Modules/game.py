@@ -1,4 +1,6 @@
-from mods import *
+from Modules.application import *
+from Modules.gameobject import *
+from Modules.sound import *
 import math
 
 # userName: any = input("Please enter your username: ")
