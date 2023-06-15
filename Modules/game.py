@@ -79,7 +79,7 @@ class Game:
     # Game loop.
     def Forever():
         window.display.fill((0, 0, 0))
-        pygame.time.delay(16)
+        pygame.time.delay(10)
 
         clock.tick(60)
         scoreText.text = score
