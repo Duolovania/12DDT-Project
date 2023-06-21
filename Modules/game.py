@@ -4,16 +4,11 @@ from Modules.sound import *
 import math
 
 # userName: any = input("Please enter your username: ")
-darkPurple: tuple = (67, 37, 52)
 mahogany: tuple = (196, 73, 0)
-wheat: tuple = (239, 214, 172)
-slateGray: tuple = (24, 58, 55)
 richBlack: tuple = (4, 21, 31)
 celeste: tuple = (185, 250, 248)
-columbiaBlue: tuple = (184, 208, 235)
 wisteria: tuple = (178, 152, 220)
 amethyst: tuple = (166, 99, 204)
-grape: tuple = (111, 45, 189)
 
 score: int = 0 # Game score.
 questionNum: int = 0
