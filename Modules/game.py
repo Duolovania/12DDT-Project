@@ -67,10 +67,12 @@ option4.transform.position = Vector2(40, 490)
 refreshAll: bool = False
 clock = pygame.time.Clock()
 
-isMenu:bool = True
+isMenu: bool = True
 
-title: Text = Text("Title", bitFont)
-playGame:Text = Text("Play Game", bitFont)
+creator: Texture = Texture("DLogo.png", 0.25)
+title: Text = Text("IDK", bitFont)
+
+playGame: Text = Text("Play Game", bitFont)
 playGame.transform.position = Vector2(40, 490)
 
 # Class handles game events.
@@ -125,8 +127,9 @@ class Game:
             background.path = "Assets/Images/mainmenu.png"
             playGame.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50, playGame.transform.position.y)
 
-            playGame.Draw(window.display)
             title.Draw(window.display)
+            playGame.Draw(window.display)
+            creator.Draw(window.display)
 
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
