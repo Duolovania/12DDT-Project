@@ -1,9 +1,10 @@
 from Modules.application import *
 from Modules.gameobject import *
 from Modules.sound import *
+from enum import Enum
 import math
 
-# userName: any = input("Please enter your username: ")
+userName: any = input("Please enter your username: ")
 mahogany: tuple = (196, 73, 0)
 richBlack: tuple = (4, 21, 31)
 celeste: tuple = (185, 250, 248)
@@ -19,7 +20,7 @@ gameRunning: bool = True # Status of game loop.
 mouseChannel: pygame.mixer.Channel = pygame.mixer.Channel(0) # New audio channel for mouse SFX.
 
 mouseCursor: Texture = Texture("mouse cursor.png", scale = 1.2)
-background: Texture = Texture("back.png", scale = 3)
+background: Texture = Texture("Backgrounds/MainMenu.png", scale = 3)
 background.transform.position = Vector2(-10, 0)
 
 answers = ["Tame Impala", "Rihanna", "Billy Joel", "Kendrick Lamar", "Fleetwood Mac", "Michael Jackson", "The Weeknd", "Post Malone", "Don Toliver", "Post Malone again"]
@@ -41,7 +42,7 @@ bitFont: str = "nokia_cellphone/nokiafc22.ttf"
 scoreText: Text = Text(score, bitFont, scale = 1, fillColor = celeste)
 scoreText.transform.position = Vector2(20, 20)
 
-fpsText: Text = Text(score, bitFont, scale = 0.4, fillColor = mahogany)
+fpsText: Text = Text(score, bitFont, scale = 0.4, fillColor = wisteria)
 fpsText.transform.position = Vector2(680, 20)
 
 questionText: Text = Text("Guess the artist", bitFont, scale = 1, fillColor = celeste)
@@ -59,16 +60,27 @@ option3.transform.position = Vector2(40, 450)
 option4: Text = Text(btn4Options[questionNum], bitFont, scale = optionSize, fillColor = richBlack)
 option4.transform.position = Vector2(40, 490)
 
+endText:Text = Text("ggs, " + userName, bitFont, scale = 1, fillColor = celeste)
+endText.transform.position = Vector2(20, 20)
+
 refreshAll: bool = False
 clock = pygame.time.Clock()
 
-isMenu: bool = True
+creator: Texture = Texture("DLogo.png", 0.15)
+creator.transform.position = Vector2(10, 10)
 
-creator: Texture = Texture("DLogo.png", 0.25)
-title: Text = Text("IDK", bitFont)
+title: Texture = Texture("ehs.png", 0.1)
+title.transform.position = Vector2(220, 150)
 
 playGame: Text = Text("Play Game", bitFont)
 playGame.transform.position = Vector2(40, 490)
+
+class GameState(Enum):
+    MainMenu = 0
+    GameScreen = 1
+    EndScreen = 2
+
+gameState: GameState = GameState(GameState.MainMenu)
 
 # Class handles game events.
 class Game:
@@ -84,13 +96,14 @@ class Game:
         window.display.fill((0, 0, 0))
         pygame.time.delay(10)
 
+        fpsText.text = "FPS: " + str(int(clock.get_fps()))
         clock.tick(60)
+        background.path = "Assets/Images/Backgrounds/" + str(gameState.name) + ".png"
         background.ResetRect()
         background.Draw(window.display)
         
-        if not isMenu:
+        if gameState == GameState.GameScreen:
             scoreText.text = score
-            fpsText.text = "FPS: " + str(int(clock.get_fps()))
             currentAlbum.transform.position = Vector2(240, math.sin((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50)
 
             if questionNum < len(answers) - 1:
@@ -103,32 +116,33 @@ class Game:
 
             if refreshAll:
                 Game.RefreshAll()
-
-            background.path = "Assets/Images/back.png"
             
             currentAlbum.Draw(window.display)
 
             scoreText.Draw(window.display)
             questionText.Draw(window.display)
 
-            fpsText.ResetRect()
-            fpsText.Draw(window.display)
-
             option1.Draw(window.display)
             option2.Draw(window.display)
             option3.Draw(window.display)
             option4.Draw(window.display)
-        else:
-            background.path = "Assets/Images/mainmenu.png"
+        elif gameState == GameState.MainMenu:
             playGame.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50, playGame.transform.position.y)
 
             title.Draw(window.display)
             playGame.Draw(window.display)
             creator.Draw(window.display)
+        else:
+            playGame.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50, playGame.transform.position.y)
 
+            playGame.Draw(window.display)
+            endText.Draw(window.display)
+            
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
 
+        fpsText.ResetRect()
+        fpsText.Draw(window.display)
         mouseCursor.Draw(window.display)
         
         Game.HandleEvents()
@@ -166,8 +180,13 @@ class Game:
                     elif option4.rect.collidepoint(mousepos):
                         Game.CheckAnswer(option4.text)
                     elif playGame.rect.collidepoint(mousepos):
-                        global isMenu
-                        isMenu = False
+                        global gameState
+                        global score
+                        global questionNum
+
+                        gameState = GameState.GameScreen
+                        score = 0 
+                        questionNum = 0
                         pygame.time.wait(50)
 
     # Checks if user picks the correct answer.
@@ -175,8 +194,10 @@ class Game:
         global questionNum
         global refreshAll
         global score
+        global gameState
 
-        if questionNum > len(answers) - 1:
+        if questionNum + 2 > len(answers) - 1:
+            gameState = GameState.EndScreen
             return
 
         if text == answers[questionNum]:
