@@ -7,6 +7,6 @@ This project was made as a test for game development without a game engine. The 
 ## Quick Preview for the Project:
 [![Pygame-Quiz](https://img.youtube.com/vi/ZKIrkrHKp-A/0.jpg)](https://www.youtube.com/watch?v=ZKIrkrHKp-A)
 
-## Important Information:
+## Key Information:
 * The entry point for the application is "source.py".
 * The main game logic is under "same.py".
