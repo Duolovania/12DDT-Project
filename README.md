@@ -9,4 +9,4 @@ This project was made as a test for game development without a game engine. The 
 
 ## Key Information:
 * The entry point for the application is "source.py".
-* The main game logic is under "same.py".
+* The main game logic is under "game.py".
