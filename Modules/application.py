@@ -18,5 +18,5 @@ class Application:
         pygame.display.set_caption(title)
     
     # Refreshes the window. Use this to change screen dimensions or fullscreen.
-    def Refresh(self):
+    def refresh(self):
         self.display = pygame.display.set_mode((self.w, self.h), self.flags)

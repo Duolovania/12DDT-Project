@@ -35,8 +35,8 @@ music: SFX = SFX("Kubbi - Up In My Jam  NO COPYRIGHT 8-bit Music.mp3") # Backgro
 rightAns: SFX = SFX("Right.wav")
 wrongAns: SFX = SFX("Wrong.wav")
 
-music.SetMusicVolume(0.25)
-music.LoadMusic()
+music.set_music_volume(0.25)
+music.load_music()
 
 bitFont: str = "nokia_cellphone/nokiafc22.ttf"
 scoreText: Text = Text(score, bitFont, scale = 1, fillColor = celeste)
@@ -85,22 +85,22 @@ gameState: GameState = GameState(GameState.MainMenu)
 # Class handles game events.
 class Game:
     # Function controls game loop and closes window after game loop is terminated.
-    def Run():
+    def run():
         while gameRunning:
-            Game.Forever()
+            Game.forever()
         pygame.quit()
         quit()
 
     # Game loop.
-    def Forever():
+    def forever():
         window.display.fill((0, 0, 0))
         pygame.time.delay(10)
 
         fpsText.text = "FPS: " + str(int(clock.get_fps()))
         clock.tick(60)
         background.path = "Assets/Images/Backgrounds/" + str(gameState.name) + ".png"
-        background.ResetRect()
-        background.Draw(window.display)
+        background.reset_rect()
+        background.draw(window.display)
         
         if gameState == GameState.GameScreen:
             scoreText.text = score
@@ -115,70 +115,70 @@ class Game:
                 option4.text = btn4Options[questionNum]
 
             if refreshAll:
-                Game.RefreshAll()
+                Game.refresh_all()
             
-            currentAlbum.Draw(window.display)
+            currentAlbum.draw(window.display)
 
-            scoreText.Draw(window.display)
-            questionText.Draw(window.display)
+            scoreText.draw(window.display)
+            questionText.draw(window.display)
 
-            option1.Draw(window.display)
-            option2.Draw(window.display)
-            option3.Draw(window.display)
-            option4.Draw(window.display)
+            option1.draw(window.display)
+            option2.draw(window.display)
+            option3.draw(window.display)
+            option4.draw(window.display)
         elif gameState == GameState.MainMenu:
             playGame.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50, playGame.transform.position.y)
 
-            title.Draw(window.display)
-            playGame.Draw(window.display)
-            creator.Draw(window.display)
+            title.draw(window.display)
+            playGame.draw(window.display)
+            creator.draw(window.display)
         else:
             playGame.transform.position = Vector2(math.cos((pygame.time.get_ticks() / 3 % 1000) / 100) * 10 + 50, playGame.transform.position.y)
 
-            playGame.Draw(window.display)
-            endText.Draw(window.display)
+            playGame.draw(window.display)
+            endText.draw(window.display)
             
         mousepos = pygame.mouse.get_pos()
         mouseCursor.transform.position = Vector2(mousepos[0], mousepos[1])
 
-        fpsText.ResetRect()
-        fpsText.Draw(window.display)
-        mouseCursor.Draw(window.display)
+        fpsText.reset_rect()
+        fpsText.draw(window.display)
+        mouseCursor.draw(window.display)
         
-        Game.HandleEvents()
+        Game.handle_events()
         pygame.display.update()
 
     # Refreshes all GameObjects.
-    def RefreshAll():
-        scoreText.ResetRect()
-        currentAlbum.ResetRect()
-        option1.ResetRect()
-        option2.ResetRect()
-        option3.ResetRect()
-        option4.ResetRect()
+    def refresh_all():
+        scoreText.reset_rect()
+        currentAlbum.reset_rect()
+        option1.reset_rect()
+        option2.reset_rect()
+        option3.reset_rect()
+        option4.reset_rect()
 
         global refreshAll
         refreshAll = False
     
     # Handles user's keyboard and mouse events.
-    def HandleEvents():
+    def handle_events():
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
                     global gameRunning
                     gameRunning = False
                 case pygame.KEYDOWN:
-                    Game.KeyEvents(event)
+                    Game.key_events(event)
                 case pygame.MOUSEBUTTONDOWN:
                     mousepos = pygame.mouse.get_pos()
                     if option1.rect.collidepoint(mousepos):
-                        Game.CheckAnswer(option1.text)
+                        Game.check_answer(option1.text)
                     elif option2.rect.collidepoint(mousepos):
-                        Game.CheckAnswer(option2.text)
+                        Game.check_answer(option2.text)
                     elif option3.rect.collidepoint(mousepos):
-                        Game.CheckAnswer(option3.text)
+                        Game.check_answer(option3.text)
                     elif option4.rect.collidepoint(mousepos):
-                        Game.CheckAnswer(option4.text)
+                        Game.check_answer(option4.text)
                     elif playGame.rect.collidepoint(mousepos):
                         global gameState
                         global score
@@ -190,7 +190,7 @@ class Game:
                         pygame.time.wait(50)
 
     # Checks if user picks the correct answer.
-    def CheckAnswer(text: str):
+    def check_answer(text: str):
         global questionNum
         global refreshAll
         global score
@@ -202,32 +202,32 @@ class Game:
 
         if text == answers[questionNum]:
             score += 1
-            rightAns.Play(volume = 0.25)
+            rightAns.play(volume = 0.25)
             pygame.time.wait(50)            
         else:
             score -= 1
-            wrongAns.Play(volume = 0.25)
+            wrongAns.play(volume = 0.25)
             pygame.time.wait(50)
 
         refreshAll = True
         questionNum += 1
 
     # Defines what each key press does.
-    def KeyEvents(gameEvent: pygame.event):
+    def key_events(gameEvent: pygame.event):
         match gameEvent.key:
             case pygame.K_UP:
-                music.SetMusicVolume(pygame.mixer.music.get_volume() + 0.1)
+                music.set_music_volume(pygame.mixer.music.get_volume() + 0.1)
             case pygame.K_DOWN:
-                music.SetMusicVolume(pygame.mixer.music.get_volume() - 0.1)
+                music.set_music_volume(pygame.mixer.music.get_volume() - 0.1)
             case pygame.K_m:
-                music.SetMusicVolume(0)
+                music.set_music_volume(0)
             case pygame.K_ESCAPE:
                 if window.flags != 0:
                     window.flags = 0
-                    window.Refresh()
+                    window.refresh()
                 else:
                     global gameRunning
                     gameRunning = False
             case pygame.K_f:
                 window.flags = pygame.FULLSCREEN
-                window.Refresh()
+                window.refresh()

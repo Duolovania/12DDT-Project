@@ -6,11 +6,11 @@ from Modules.transform import *
 class GameObject(ABC):
     # Abstract method. Must be implemented in child.
     @abstractclassmethod
-    def ResetRect(self):
+    def reset_rect(self):
         pass
 
     # Outputs the object onto the screen.
-    def Draw(self, screen: pygame.Surface):
+    def draw(self, screen: pygame.Surface):
         self.rect.x = self.transform.position.x
         self.rect.y = self.transform.position.y
         screen.blit(self.surface, self.rect)
@@ -21,10 +21,10 @@ class Texture(GameObject):
         self.path: str = "Assets/Images/" + path
         self.transform: Transform = Transform(localScale = scale)
 
-        self.ResetRect()
+        self.reset_rect()
     
     # Resets the rect. This updates any values in __init__() before image is drawn on screen.
-    def ResetRect(self):
+    def reset_rect(self):
         self.image: pygame.Surface = pygame.image.load(self.path).convert_alpha()
         self.surface = pygame.transform.scale(self.image, (self.image.get_width() * self.transform.localScale.x, self.image.get_height() * self.transform.localScale.y))
 
@@ -46,10 +46,10 @@ class Text(GameObject):
         self.transform: Transform = Transform(localScale = scale)
         self.text: any = textValue
 
-        self.ResetRect()
+        self.reset_rect()
 
     # Resets the rect. This updates any values in __init__() before text is drawn on screen.
-    def ResetRect(self):
+    def reset_rect(self):
         self.fontObj: pygame.font = pygame.font.Font("Assets/Fonts/" + self.fontPath, 64)
         renderedText: pygame.Surface = self.fontObj.render(str(self.text), self.antiAlias, self.fillColor, self.borderColor)
         width = renderedText.get_width()
